@@ -182,11 +182,11 @@ def _get_ci_setup():
         if 'Build' in nn:
             logger.info('Filter Var {}: {}\n'.format(nn, os.environ.get(nn, 'NOPE')))
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], universal_newlines=True).strip()
-    azure_commit = os.environ.get('Build.SourceVersion', None)
+    azure_commit = os.environ.get('BUILD_SOURCEVERSION', None)
     gitlab_commit = os.environ.get('CI_COMMIT_SHA', None)
     commit = azure_commit or gitlab_commit or head
 
-    azure_refname = os.environ.get('Build.SourceBranchName', None)
+    azure_refname = os.environ.get('BUILD_.SOURCEBRANCHNAME', None)
     gitlab_refname = os.environ.get('CI_COMMIT_REF_NAME', None)
 
     refname = azure_refname or gitlab_refname or 'master'
