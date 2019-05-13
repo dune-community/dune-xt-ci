@@ -175,6 +175,12 @@ def _get_superurl(superdir):
 
 
 def _get_ci_setup():
+    logger = logging.getLogger('CI env')
+    for nn in ['Build.SourceVersion', 'Build.SourceVersion']:
+        logger.info('Var {}: {}\n'.format(nn, os.environ.get(nn, 'NOPE')))
+    for nn in os.environ.keys():
+        if 'Build' in nn:
+            logger.info('Filter Var {}: {}\n'.format(nn, os.environ.get(nn, 'NOPE')))
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], universal_newlines=True).strip()
     azure_commit = os.environ.get('Build.SourceVersion', None)
     gitlab_commit = os.environ.get('CI_COMMIT_SHA', None)
@@ -186,7 +192,7 @@ def _get_ci_setup():
     refname = azure_refname or gitlab_refname or 'master'
     return commit, refname.replace('/', '_')
 
-    
+
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     level = logging.DEBUG if arguments['--verbose'] else logging.INFO
