@@ -176,10 +176,10 @@ def _get_superurl(superdir):
 
 def _get_ci_setup():
     logger = logging.getLogger('CI env')
-    for nn in ['Build.SourceVersion', 'Build.SourceVersion']:
+    for nn in ['BUILD_SOURCEVERSION', 'BUILD_.SOURCEBRANCHNAME']:
         logger.info('Var {}: {}\n'.format(nn, os.environ.get(nn, 'NOPE')))
     for nn in os.environ.keys():
-        if 'Build' in nn:
+        if 'BUILD' in nn:
             logger.info('Filter Var {}: {}\n'.format(nn, os.environ.get(nn, 'NOPE')))
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], universal_newlines=True).strip()
     azure_commit = os.environ.get('BUILD_SOURCEVERSION', None)
