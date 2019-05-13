@@ -174,6 +174,19 @@ def _get_superurl(superdir):
     return subprocess.check_output(cmd, universal_newlines=True)
 
 
+def _get_ci_setup():
+    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], universal_newlines=True).strip()
+    azure_commit = os.environ.get('Build.SourceVersion', None)
+    gitlab_commit = os.environ.get('CI_COMMIT_SHA', None)
+    commit = azure_commit or gitlab_commit or head
+
+    azure_refname = os.environ.get('Build.SourceBranchName', None)
+    gitlab_refname = os.environ.get('CI_COMMIT_REF_NAME', None)
+
+    refname = azure_refname or gitlab_refname or 'master'
+    return commit, refname.replace('/', '_')
+
+    
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     level = logging.DEBUG if arguments['--verbose'] else logging.INFO
@@ -182,9 +195,7 @@ if __name__ == '__main__':
     superdir = path.join(scriptdir, '..', '..', '..')
     superurl = _get_superurl(superdir)
 
-    head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], universal_newlines=True).strip()
-    commit = os.environ.get('CI_COMMIT_SHA', head)
-    refname = os.environ.get('CI_COMMIT_REF_NAME', 'master').replace('/', '_')
+    commit, refname = _get_ci_setup()
     all_compilers = {(f['base'], f['cc'], f['cxx']) for f in TAG_MATRIX.values()}
 
     module = arguments['MODULE_NAME']
