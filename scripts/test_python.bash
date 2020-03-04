@@ -31,6 +31,5 @@ if [ "${SYSTEM_PULLREQUEST_ISFORK}" == "True" ] ; then
 fi
 
 cd ${SUPERDIR}/${MY_MODULE}
-${DUNE_BUILD_DIR}/${MY_MODULE}/run-in-dune-env pip install codecov
-${DUNE_BUILD_DIR}/${MY_MODULE}/run-in-dune-env codecov -p ${SUPERDIR}/${MY_MODULE} -K -Z -v \
+bash <(curl -s https://codecov.io/bash) -p ${SUPERDIR}/${MY_MODULE} -K -Z -v \
   -X gcov -F pytest -t ${CODECOV_TOKEN}
