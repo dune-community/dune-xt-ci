@@ -55,7 +55,7 @@ for d in "dune-common" "dune-pybindxi" "dune-geometry"  "dune-istl"  "dune-grid"
     lcov --directory . --output-file ${COVERAGE_INFO} -r ${COVERAGE_INFO} "${SUPERDIR}/${d}/*"
 done
 lcov --directory . --output-file ${COVERAGE_INFO} -r ${COVERAGE_INFO} "${SUPERDIR}/${MY_MODULE}/dune/xt/*/test/*"
-cd ${SUPERDIR}/${MY_MODULE}
+# cd ${SUPERDIR}/${MY_MODULE}
 bash <(curl -s https://codecov.io/bash) -p ${SUPERDIR}/${MY_MODULE} -Z -K -v \
   -X gcov -X coveragepy -F ctest -f ${COVERAGE_INFO} -t ${CODECOV_TOKEN}
 popd
