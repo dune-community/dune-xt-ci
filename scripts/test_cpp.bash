@@ -33,7 +33,7 @@ else
 fi
 
 ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${CTEST}
-${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} ${HEADERCHECK}
+# ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} ${HEADERCHECK}
 
 cp ${DUNE_BUILD_DIR}/${MY_MODULE}/${MY_MODULE//-/\/}/test/*xml ${HOME}/testresults/
 
