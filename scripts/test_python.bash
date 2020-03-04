@@ -32,4 +32,5 @@ fi
 
 cd ${SUPERDIR}/${MY_MODULE}
 ${DUNE_BUILD_DIR}/${MY_MODULE}/run-in-dune-env pip install codecov
-${DUNE_BUILD_DIR}/${MY_MODULE}/run-in-dune-env codecov -X gcov -F pytest -t ${CODECOV_TOKEN}
+${DUNE_BUILD_DIR}/${MY_MODULE}/run-in-dune-env codecov -p ${SUPERDIR}/${MY_MODULE} -K -Z -v \
+  -X gcov -F pytest -t ${CODECOV_TOKEN}
