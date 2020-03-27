@@ -36,26 +36,3 @@ ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${CTEST}
 # ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} ${HEADERCHECK}
 
 cp ${DUNE_BUILD_DIR}/${MY_MODULE}/${MY_MODULE//-/\/}/test/*xml ${HOME}/testresults/
-
-# clang coverage currently disabled for being too mem hungry
-if [[ ${CC} == *"clang"* ]] ; then
-    echo "Coverage reporting disabled with Clang"
-    exit 0
-fi
-
-if [ "${SYSTEM_PULLREQUEST_ISFORK}" == "True" ] ; then
-    echo "Coverage reporting disabled for forked repo/PR"
-    exit 0
-fi
-
-pushd ${DUNE_BUILD_DIR}/${MY_MODULE}
-COVERAGE_INFO=${PWD}/coverage.info
-lcov --directory . --output-file ${COVERAGE_INFO} --ignore-errors gcov -c
-for d in "dune-common" "dune-pybindxi" "dune-geometry"  "dune-istl"  "dune-grid" "dune-alugrid"  "dune-uggrid"  "dune-localfunctions" ; do
-    lcov --directory . --output-file ${COVERAGE_INFO} -r ${COVERAGE_INFO} "${SUPERDIR}/${d}/*"
-done
-lcov --directory . --output-file ${COVERAGE_INFO} -r ${COVERAGE_INFO} "${SUPERDIR}/${MY_MODULE}/dune/xt/*/test/*"
-# cd ${SUPERDIR}/${MY_MODULE}
-bash <(curl -s https://codecov.io/bash) -R ${SUPERDIR}/${MY_MODULE} -s ${DUNE_BUILD_DIR}/${MY_MODULE} -K -v \
-  -X gcov -X coveragepy -F ctest -f ${COVERAGE_INFO} -t ${CODECOV_TOKEN} -p ${SUPERDIR}/${MY_MODULE}
-popd

@@ -24,12 +24,3 @@ ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} bindings
 ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} test_python
 
 cp ${DUNE_BUILD_DIR}/${MY_MODULE}/python/pytest_results.xml ${HOME}/testresults/
-
-if [ "${SYSTEM_PULLREQUEST_ISFORK}" == "True" ] ; then
-    echo "Coverage reporting disabled for forked repo/PR"
-    exit 0
-fi
-
-cd ${SUPERDIR}/${MY_MODULE}
-bash <(curl -s https://codecov.io/bash) -p ${SUPERDIR}/${MY_MODULE} -K -v \
-  -X gcov -F pytest -t ${CODECOV_TOKEN}
