@@ -10,6 +10,7 @@ variables:
   CCACHE_BASEDIR: ${CI_PROJECT_DIR}
   CCACHE_DIR: "${CI_PROJECT_DIR}/.ccache"
   CCACHE_COMPILERCHECK: content
+  CCACHE_COMPRESS: "true"
 
 .jobtpl:
   services:
@@ -24,29 +25,27 @@ variables:
     paths:
       - .ccache
   before_script:
-    - |
-      apk --update add openssh-client rsync git file bash python3 py3-pip ccache
-      pip install -U docker jinja2 docopt
-      export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
-      export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
-      # get image with fallback to master branch of the super repo
-      docker pull dunecommunity/${BASEIMAGE} || export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull dunecommunity/${BASEIMAGE}
-      export ENV_FILE=${HOME}/env
-      mkdir ${CI_PROJECT_DIR}/testresults && chmod -R 777 ${CI_PROJECT_DIR}/testresults
-      DOCKER_RUN="docker run -v ${CI_PROJECT_DIR}/testresults:/home/dune-ci/testresults -v ${CI_PROJECT_DIR}/.ccache:/home/dune-ci/.ccache --env-file ${ENV_FILE} ${IMAGE}"
-      git submodule update --init --recursive
-      docker build --build-arg BASE=${BASEIMAGE} -t ${IMAGE} -f .ci/shared/docker/ci_run/Dockerfile .
+    - apk --update add openssh-client rsync git file bash python3 py3-pip ccache
+    - pip install -U docker jinja2 docopt
+    - export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
+    - export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+    - # get image with fallback to master branch of the super repo
+    - docker pull dunecommunity/${BASEIMAGE} || export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull dunecommunity/${BASEIMAGE}
+    - export ENV_FILE=${HOME}/env
+    - mkdir ${CI_PROJECT_DIR}/testresults && chmod -R 777 ${CI_PROJECT_DIR}/testresults
+    - mkdir ${CI_PROJECT_DIR}/.ccache && chmod -R 777 ${CI_PROJECT_DIR}/.ccache && ls -la ${CI_PROJECT_DIR}/.ccache
+    - DOCKER_RUN="docker run -v ${CI_PROJECT_DIR}/testresults:/home/dune-ci/testresults -v ${CI_PROJECT_DIR}/.ccache:/home/dune-ci/.ccache --env-file ${ENV_FILE} ${IMAGE}"
+    - git submodule update --init --recursive
+    - docker build --build-arg BASE=${BASEIMAGE} -t ${IMAGE} -f .ci/shared/docker/ci_run/Dockerfile .
   script:
-    - |
-      [[ -f ./.gitsuper ]] && echo "Please remove .gitsuper from the repo" && exit 1
-      python3 ./.ci/shared/scripts/make_env_file.py
-      ${DOCKER_RUN} /home/dune-ci/src/${MY_MODULE}/.ci/shared/scripts/test_cpp.bash
-      ${DOCKER_RUN} /home/dune-ci/src/${MY_MODULE}/.ci/shared/scripts/test_python.bash
+    - [[ -f ./.gitsuper ]] && echo "Please remove .gitsuper from the repo" && exit 1
+    - python3 ./.ci/shared/scripts/make_env_file.py
+    - ${DOCKER_RUN} /home/dune-ci/src/${MY_MODULE}/.ci/shared/scripts/test_cpp.bash
+    - ${DOCKER_RUN} /home/dune-ci/src/${MY_MODULE}/.ci/shared/scripts/test_python.bash
   after_script:
-    - |
-      export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
-      echo $DOCKER_PW | docker login --username="$DOCKER_USER" --password-stdin
-      docker push ${IMAGE}
+    - export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+    - echo $DOCKER_PW | docker login --username="$DOCKER_USER" --password-stdin
+    - docker push ${IMAGE}
   artifacts:
     reports:
       junit: '${CI_PROJECT_DIR}/testresults/*xml'
