@@ -1,7 +1,8 @@
 ARG CC
 ARG COMMIT
 ARG BASE
-FROM zivgitlab.wwu.io/ag-ohlberger/dune-community/dune-xt-super/base_${BASE}_${CC}:${COMMIT}
+ARG PROJECT
+FROM ${PROJECT}/base_${BASE}_${CC}:${COMMIT}
 
 WORKDIR ${SUPERDIR}
 

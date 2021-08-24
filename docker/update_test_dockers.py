@@ -164,7 +164,7 @@ def _build_combination(tag_matrix, dockerdir, module, commit, refname):
         print(f'Repo is: {repo}')
 
         with Timer('docker build ', logger.info):
-            buildargs = {'COMMIT': commit, 'CC': cc, 'project_name': module, 'BASE': settings['base']}
+            buildargs = {'COMMIT': commit, 'CC': cc, 'project_name': module, 'BASE': settings['base'], 'PROJECT': PROJECT}
             img = _docker_build(
                 client,
                 logger,
