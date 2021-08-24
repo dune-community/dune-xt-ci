@@ -34,6 +34,9 @@ variables:
     - export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
     - export IMAGE="${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
     - "# get image with fallback to master branch of the super repo"
+    - echo "${REGISTRY}/${BASEIMAGE}"
+    - echo "${MY_MODULE}-testing_${DOCKER_TAG}:master"
+    - echo "${IMAGE}"
     - docker pull ${REGISTRY}/${BASEIMAGE} || export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull ${REGISTRY}/${BASEIMAGE}
     - export ENV_FILE=${HOME}/env
     - mkdir ${CI_PROJECT_DIR}/testresults && chmod -R 777 ${CI_PROJECT_DIR}/testresults
