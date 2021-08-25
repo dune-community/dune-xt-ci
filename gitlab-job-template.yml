@@ -29,8 +29,7 @@ variables:
     paths:
       - .ccache
   variables:
-    IMAGE: "${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
-    TRAVIS_COMMIT: "${CI_COMMIT_SHA}"
+    IMAGE: "${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${CI_COMMIT_SHA}"
   before_script:
     - apk --update add openssh-client rsync git file bash python3 py3-pip ccache
     - pip install -U docker jinja2 docopt
