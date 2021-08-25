@@ -1,8 +1,8 @@
 # kate: indent-width 2;
 
 variables:
-  TRAVIS_BRANCH: ${CI_COMMIT_REF_NAME}
-  TRAVIS_COMMIT: ${CI_COMMIT_SHA}
+  TRAVIS_BRANCH: "${CI_COMMIT_REF_NAME}"
+  TRAVIS_COMMIT: "${CI_COMMIT_SHA}"
   DOCKER_HOST: tcp://docker:2375/
   DOCKER_DRIVER: overlay2
   GIT_SUBMODULE_STRATEGY: recursive
@@ -12,7 +12,7 @@ variables:
   CCACHE_COMPILERCHECK: content
   CCACHE_COMPRESS: "true"
   PYTEST_ADDOPTS: "-s"
-  REGISTRY: zivgitlab.wwu.io/ag-ohlberger/dune-community/docker/
+  REGISTRY: zivgitlab.wwu.io/ag-ohlberger/dune-community/docker
 
 
 .jobtpl:
@@ -30,6 +30,7 @@ variables:
       - .ccache
   variables:
     IMAGE: "${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+    TRAVIS_COMMIT: "${CI_COMMIT_SHA}"
   before_script:
     - apk --update add openssh-client rsync git file bash python3 py3-pip ccache
     - pip install -U docker jinja2 docopt
