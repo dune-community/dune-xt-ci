@@ -28,11 +28,12 @@ variables:
     key: "$CI_JOB_NAME"
     paths:
       - .ccache
+  variables:
+    BASEIMAGE: "${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
+    IMAGE: "${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
   before_script:
     - apk --update add openssh-client rsync git file bash python3 py3-pip ccache
     - pip install -U docker jinja2 docopt
-    - export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
-    - export IMAGE="${CI_REGISTRY_IMAGE}/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
     - "# get image with fallback to master branch of the super repo"
     - echo "${REGISTRY}/${BASEIMAGE}"
     - echo "${MY_MODULE}-testing_${DOCKER_TAG}:master"
