@@ -51,7 +51,7 @@ variables:
     - ${DOCKER_RUN} /home/dune-ci/src/${MY_MODULE}/.ci/shared/scripts/test_python.bash
   after_script:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - echo $DOCKER_PW | docker login --username="$DOCKER_USER" --password-stdin
+    - echo "${IMAGE}"
     - docker push ${IMAGE}
   artifacts:
     reports:
