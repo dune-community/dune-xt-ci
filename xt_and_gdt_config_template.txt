@@ -159,7 +159,7 @@ lint:
         CI_IMAGE: {{ image }}
     tags:
     {%- if 'gdt' in subdirs[0] and 'clang' in image %}
-        - lucas
+        - amm-only
     {%- else %}
         - dustin
     {%- endif %}
