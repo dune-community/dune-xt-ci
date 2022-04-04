@@ -1,5 +1,5 @@
 ARG BASE
-FROM zivgitlab.wwu.io/ag-ohlberger/dune-community/docker/testing-base_${BASE}:bfea00695a81595e3155d7d5702d35b6d9eb0bac
+FROM zivgitlab.wwu.io/ag-ohlberger/dune-community/docker/testing-base_${BASE}:latest
 
 ENV CC=gcc \
     CXX=g++
